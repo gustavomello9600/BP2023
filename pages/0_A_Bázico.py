@@ -17,7 +17,8 @@ A Bázico se enxerga como uma [*Digital Native Vertical Brand*](https://dunn.med
 , isto é, uma marca nascida em meio digital que distribui seus produtos diretamente para seus clientes
 (e por isso é vertical).
 Posicionamo-nos como *creators* e engajamos uma comunidade conectada em torno dos nossos
-produtos disponibilizados através do site [sejabazico.com.br](sejabazico.com.br).
+produtos disponibilizados através do site [sejabazico.com.br](sejabazico.com.br) e de pontos de venda/experiência
+presenciais como a Houze, nossa loja física.
 
 Da compra, inicia-se o seguinte *flywheel*:
 """
