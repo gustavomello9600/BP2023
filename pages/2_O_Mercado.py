@@ -1,11 +1,9 @@
 import datetime
-import locale
+import babel.numbers
 
 import pandas as pd
 import streamlit as st
 import yfinance as yf
-
-locale.setlocale(locale.LC_ALL, "German")
 
 f"""
 # O Mercado
@@ -34,8 +32,8 @@ dados_do_setor
 
 f"""
 Sumarizando os dados acima, entendemos que o mercado de moda no Brasil movimenta ao menos R$ 
-{locale.format_string("%.2f", sum(faturamentos_anuais), True)} anuais e que podemos esperar
-um valor de mercado de 
+{babel.numbers.format_currency(sum(faturamentos_anuais), "BRL", "¤ #,##0.00", locale="pt_BR")} anuais e
+que podemos esperar um valor de mercado de 
 {sum(valor_de_mercado/receita for receita, valor_de_mercado in zip(faturamentos_anuais, valores_de_mercado))
  /len(empresas):.2f}x a receita total da Bázico na ocasião de uma oferta pública de ações.
 """
