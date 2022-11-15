@@ -2,6 +2,7 @@ import datetime
 import babel.numbers
 
 import pandas as pd
+import pytz
 import streamlit as st
 import yfinance as yf
 
@@ -9,7 +10,7 @@ f"""
 # O Mercado
 
 Abaixo elencamos as principais empresas listadas na B3 pertencentes ao setor de moda com dados
-atualizados em {datetime.datetime.now().strftime("%d/%m/%Y às %H:%M")}.
+atualizados em {datetime.datetime.now(tz=pytz.timezone('America/Sao_Paulo')).strftime("%d/%m/%Y às %H:%M")}.
 """
 
 tickers = ['ALPA4', 'SOMA3', 'ARZZ3', 'VIVA3', 'AMAR3', 'GRND3', 'CEAB3', 'TECN3',
@@ -31,7 +32,7 @@ dados_do_setor = pd.DataFrame({"Ticker": tickers,
 dados_do_setor
 
 f"""
-Sumarizando os dados acima, entendemos que o mercado de moda no Brasil movimenta ao menos R$ 
+Sumarizando os dados acima, entendemos que o mercado de moda no Brasil movimenta ao menos 
 {babel.numbers.format_currency(sum(faturamentos_anuais), "BRL", "¤ #,##0.00", locale="pt_BR")} anuais e
 que podemos esperar um valor de mercado de 
 {sum(valor_de_mercado/receita for receita, valor_de_mercado in zip(faturamentos_anuais, valores_de_mercado))

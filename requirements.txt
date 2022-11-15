@@ -3,3 +3,4 @@ pandas~=1.5.1
 graphviz~=0.20.1
 yfinance~=0.1.86
 Babel~=2.11.0
+pytz~=2022.6
