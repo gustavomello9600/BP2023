@@ -43,7 +43,7 @@ grafo.edge("Encantamento", "Nova aquisição", label="Recompra")
 st.graphviz_chart(grafo, use_container_width=True)
 
 faturamento_anual = (pd.DataFrame({"Ano": ["2020", "2021", "2022 (YTD)"],
-                                   "Faturamento": [24274.26, 310535.35, 943085.58],
+                                   "Faturamento (BRL)": [24274.26, 310535.35, 943085.58],
                                    "Crescimento YoY (%)": [None, 1179.27, 203.69]})
                                   .set_index("Ano")
                                   .style.format(na_rep="-", thousands=".", decimal=",", precision=2))
