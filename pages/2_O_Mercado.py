@@ -6,6 +6,7 @@ import babel.numbers
 
 import pandas as pd
 import pytz
+import requests
 import streamlit as st
 import yfinance as yf
 
@@ -64,7 +65,7 @@ múltiplo_de_receita = sum(valor_de_mercado/receita
 f"""
 Sumarizando-lhes, entendemos que o mercado de moda no Brasil movimenta ao menos 
 {em_real(receita_total)} anuais e que podemos esperar um valor de mercado de 
-{múltiplo_de_receita:.2f}x a receita total da Bázico na ocasião de uma oferta pública de ações.
+{múltiplo_de_receita:.2f}x a receita anual da Bázico na ocasião de uma oferta pública de ações.
 """
 
 preços_históricos_de_ações.columns = sorted(nomes, key=lambda nome: tickers[nomes.index(nome)])

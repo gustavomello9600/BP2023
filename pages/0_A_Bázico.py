@@ -57,8 +57,8 @@ manga curta, camisas de gola polo ou gola padre e cuecas.
 
 ## Breve histórico
 A marca nasceu em Aracaju no ano de 2020, tomou corpo de empresa no final de 2021 e tem crescido a um CAGR de 523,31%.
-Em fevereiro de 2022, transferiu sua operação para uma sede própria, denominada de QG. Em setembro do mesmo ano, abriu
-a primeira loja própria: a Houze. Em novembro de 2022, a Bázico é composta por 7 pessoas (incluindo os dois *founders*) 
+Em setembro de 2021, transferiu sua operação para uma sede própria, denominada de QG. Em setembro de 2022, abriu
+a primeira loja própria: a Houze. Em novembro do mesmo ano, a Bázico é composta por 7 pessoas (incluindo os dois *founders*) 
 e fatura uma média mensal de R$ 129.256,92 (considerando agosto, setembro e outubro).
 """
 
@@ -80,7 +80,7 @@ articulador da estratégia de marca como *creator*. Trouxe sua experiência e se
 pregressa de artista, tanto solo quanto em grupo, para conquistar a lealdade e a admiração dos atuais clientes.
 
 ## Competidores
-O **player** mais bem estabelecido no mercado de moda básica como um todo é a Hering.
+O **player** mais bem estabelecido no segmento de moda básica é a Hering.
 
 No segmento de moda masculina de maior padrão, enxergamos concorrentes na Aramis e na Oficina Reserva.
 
