@@ -14,7 +14,13 @@ arquivo_de_cache = Path("cache_de_dados_de_mercado")
 tickers = ['ALPA4', 'SOMA3', 'ARZZ3', 'VIVA3', 'AMAR3', 'GRND3', 'CEAB3', 'TECN3',
            'GUAR3', 'VULC3', 'TFCO4', 'LLIS3', 'CGRA4', 'CAMB3', 'MNDL3', 'LREN3']
 
-em_real = lambda x: "R\$" + babel.numbers.format_currency(x, "BRL", "¤ #,##0.00", locale="pt_BR")[2:]
+
+def em_real(x, escapar_cifrão=True):
+    if escapar_cifrão:
+        return "R\$" + babel.numbers.format_currency(x, "BRL", "¤ #,##0.00", locale="pt_BR")[2:]
+    else:
+        return babel.numbers.format_currency(x, "BRL", "¤ #,##0.00", locale="pt_BR")
+
 
 if arquivo_de_cache.exists():
     with open(arquivo_de_cache, "rb") as cache:
@@ -78,21 +84,36 @@ Desde 2017, o preço médio das ações do setor saiu de {em_real((a := evoluç�
  {em_real((b := evolução_do_setor["Média do setor"].iloc[-1]))} o que representa um aumento de {100*(b/a - 1):.2f}%
 ou ainda um CAGR de {100*(cagr := (b/a)**(1/5) - 1):.2f}%.
 
-Mantidas as mesmas taxas de crescimento anual do mercado, é possível ancorar as perspectivas de crescimento mais
-otimistas  nas seguintes projeções:
+
+## TAM, SAM, SOM
+Mantidas as mesmas taxas de crescimento anual do mercado e considerando uma inflação de 5,91% a.a. (média dos últimos 5 anos),
+é possível ensaiar as seguintes projeções:
 """
 
+inflação = 0.059124360928308084
+
 anos = [5, 10, 20]
-SAM = [receita_total * (1 + cagr)**t for t in anos]
+SAM = [receita_total * (1 + cagr - inflação)**t for t in anos]
 MS_Bázico = [0.005, 0.01, 0.1]
 SOM = [sam * ms for sam, ms in zip(SAM, MS_Bázico)]
 EV_Bázico = [múltiplo_de_receita * som for som in SOM]
 
 projeção_de_crescimento_de_mercado = pd.DataFrame({"Anos": anos,
-                                                   "SAM": SAM,
-                                                   "Market share da Bázico (%)": [100 * ms for ms in MS_Bázico],
-                                                   "SOM": SOM,
-                                                   "Valor de mercado da Bázico": EV_Bázico
+                                                   "Mercado total endereçável": SAM,
+                                                   "Market share alcançável (%)": [100 * ms for ms in MS_Bázico],
+                                                   "Mercado total alcançável": SOM,
+                                                   "Valor de mercado alcançável": EV_Bázico
                                                    }).style.format(na_rep="-", thousands=".", decimal=",", precision=2)
 
 projeção_de_crescimento_de_mercado
+
+market_share = st.slider("% de market share", 0.5, 50.0, value=1.0, step=0.5)
+anos_para_o_futuro = st.slider("Anos para o futuro", 1, 40, value=5, step=1)
+
+SAM = receita_total * (1 + cagr - inflação)**(anos_para_o_futuro)
+SOM = SAM * market_share/100
+
+col1, col2, col3 = st.columns(3)
+col1.metric("Mercado total endereçável", em_real(SAM/(10**9), False) + " Bi")
+col2.metric("Mercado total alcançável", em_real(SOM/(10**9), False) + " Bi")
+col3.metric("Valor de mercado alcançável", em_real((SOM * múltiplo_de_receita)/(10**9), False) + " Bi")
