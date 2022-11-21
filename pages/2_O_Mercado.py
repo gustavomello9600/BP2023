@@ -6,7 +6,6 @@ import babel.numbers
 
 import pandas as pd
 import pytz
-import requests
 import streamlit as st
 import yfinance as yf
 
@@ -58,8 +57,9 @@ dados_do_setor
 
 receita_total = sum(faturamentos_anuais)
 múltiplo_de_receita = sum(valor_de_mercado/receita
-                          for receita, valor_de_mercado
-                          in zip(faturamentos_anuais, valores_de_mercado)
+                          for i, (receita, valor_de_mercado)
+                          in enumerate(zip(faturamentos_anuais, valores_de_mercado))
+                          if tickers[i] != 'TFCO4'
                           )/len(empresas)
 
 f"""
@@ -87,34 +87,54 @@ ou ainda um CAGR de {100*(cagr := (b/a)**(1/5) - 1):.2f}%.
 
 
 ## TAM, SAM, SOM
-Mantidas as mesmas taxas de crescimento anual do mercado e considerando uma inflação de 5,91% a.a. (média dos últimos 5 anos),
-é possível ensaiar as seguintes projeções:
+Mantidas as mesmas taxas de crescimento anual do mercado e considerando uma inflação de 5,91% a.a.
+(média dos últimos 5 anos), é possível ensaiar as seguintes projeções:
 """
 
 inflação = 0.059124360928308084
+market_share_de_moda_básica = faturamentos_anuais[1]/receita_total
 
-anos = [5, 10, 20]
-SAM = [receita_total * (1 + cagr - inflação)**t for t in anos]
-MS_Bázico = [0.005, 0.01, 0.1]
-SOM = [sam * ms for sam, ms in zip(SAM, MS_Bázico)]
-EV_Bázico = [múltiplo_de_receita * som for som in SOM]
+anos = [0, 5, 10, 20]
+TAM = [receita_total * (1 + cagr - inflação) ** t for t in anos]
+SAM = [tam * market_share_de_moda_básica for tam in TAM]
+SOM = [sam/2 for sam in SAM]
+
+MS_Bázico = [0.0025, 0.01, market_share_de_moda_básica/2]
+receita_anual_projetada = [tam * ms for tam, ms in zip(TAM[1:], MS_Bázico)]
+EV_Bázico = [múltiplo_de_receita * rec for rec in receita_anual_projetada]
 
 projeção_de_crescimento_de_mercado = pd.DataFrame({"Anos": anos,
-                                                   "Mercado total endereçável": SAM,
-                                                   "Market share alcançável (%)": [100 * ms for ms in MS_Bázico],
-                                                   "Mercado total alcançável": SOM,
-                                                   "Valor de mercado alcançável": EV_Bázico
+                                                   "TAM": TAM,
+                                                   "SAM": SAM,
+                                                   "SOM": SOM,
+                                                   "Market Share (%)": [None] + [100 * ms for ms in MS_Bázico],
+                                                   "Receita Anual (BRL)": [None] + receita_anual_projetada,
+                                                   "Valor de mercado": [None] + EV_Bázico
                                                    }).style.format(na_rep="-", thousands=".", decimal=",", precision=2)
 
 projeção_de_crescimento_de_mercado
 
-market_share = st.slider("% de market share", 0.5, 50.0, value=1.0, step=0.5)
-anos_para_o_futuro = st.slider("Anos para o futuro", 1, 40, value=5, step=1)
 
-SAM = receita_total * (1 + cagr - inflação)**(anos_para_o_futuro)
-SOM = SAM * market_share/100
+f"""Presumiu-se que o SAM, entendido como o segmento de moda básica, fosse aproximadamente igual a
+{market_share_de_moda_básica*100:.2f}% do TAM. Este percentual corresponde ao atual *market share* do grupo SOMA, 
+*holding* controladora da Hering.
+
+Uma vez que a ambição da Bázico é se tornar o *player* dominante deste segmento, estima-se o SOM como 50% do segmento
+de moda básica, isto é, 50% do SAM e {market_share_de_moda_básica*50:.2f}% do TAM.
+
+As projeções de crescimento de receita consideram a evolução de DNVBs nacionais e internacionais e de marcas
+tradicionais como a Reserva."""
+
+market_share = st.slider("% de market share", 0.5, 50.0, value=1.0, step=0.5)
+anos_para_o_futuro = st.slider("Anos para o futuro", 1, 40, value=10, step=1)
+
+TAM = receita_total * (1 + cagr - inflação) ** (anos_para_o_futuro)
+SAM = TAM * market_share_de_moda_básica
+SOM = SAM/2
 
 col1, col2, col3 = st.columns(3)
-col1.metric("Mercado total endereçável", em_real(SAM/(10**9), False) + " Bi")
-col2.metric("Mercado total alcançável", em_real(SOM/(10**9), False) + " Bi")
-col3.metric("Valor de mercado alcançável", em_real((SOM * múltiplo_de_receita)/(10**9), False) + " Bi")
+col1.metric("TAM", em_real(TAM/(10**9), False) + " Bi")
+col2.metric("SAM", em_real(SAM/(10**9), False) + " Bi")
+col3.metric("SOM", em_real(SOM/(10**9), False) + " Bi")
+col1.metric("Receita anual", em_real((TAM * market_share/100)/(10**9), False) + " Bi")
+col2.metric("Valor de mercado", em_real((múltiplo_de_receita * TAM * market_share/100)/(10**9), False) + " Bi")
