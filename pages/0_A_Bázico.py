@@ -48,7 +48,7 @@ faturamento_anual = (pd.DataFrame({"Ano": ["2020", "2021", "2022 (YTD)"],
                                   .set_index("Ano")
                                   .style.format(na_rep="-", thousands=".", decimal=",", precision=2))
 
-CAGR = (faturamento_anual["Faturamento (BRL)"][2]/faturamento_anual["Faturamento (BRL)"][0])**(1/2) - 1
+CAGR = (1011345.25/24274.26)**(1/2) - 1
 
 f"""
 
