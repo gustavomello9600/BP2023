@@ -43,12 +43,14 @@ grafo.edge("Encantamento", "Nova aquisição", label="Recompra")
 st.graphviz_chart(grafo, use_container_width=True)
 
 faturamento_anual = (pd.DataFrame({"Ano": ["2020", "2021", "2022 (YTD)"],
-                                   "Faturamento (BRL)": [24274.26, 310535.35, 943085.58],
+                                   "Faturamento (BRL)": [24274.26, 310535.35, 1011345.25],
                                    "Crescimento YoY (%)": [None, 1179.27, 203.69]})
                                   .set_index("Ano")
                                   .style.format(na_rep="-", thousands=".", decimal=",", precision=2))
 
-"""
+CAGR = (faturamento_anual["Faturamento (BRL)"][2]/faturamento_anual["Faturamento (BRL)"][0])**(1/2) - 1
+
+f"""
 
 Atualmente, a Bázico oferece produtos de moda básica masculina de alta qualidade em termos de materiais e modelagem.
 Dentre o *mix* de ofertas, dispomos de camisetas tradicionas, de gola "V", de modelagem alongada, camisas sociais de
@@ -56,8 +58,8 @@ manga curta, camisas de gola polo ou gola padre e cuecas.
 
 
 ## Breve histórico
-A marca nasceu em Aracaju no ano de 2020, tomou corpo de empresa no final de 2021 e tem crescido a um CAGR de 523,31%.
-Em setembro de 2021, transferiu sua operação para uma sede própria, denominada de QG. Em setembro de 2022, abriu
+A marca nasceu em Aracaju no ano de 2020, tomou corpo de empresa no final de 2021 e tem crescido a um CAGR de {CAGR*100
+:.2f}%. Em setembro de 2021, transferiu sua operação para uma sede própria, denominada de QG. Em setembro de 2022, abriu
 a primeira loja própria: a Houze. Em novembro do mesmo ano, a Bázico é composta por 7 pessoas (incluindo os dois *founders*) 
 e fatura uma média mensal de R$ 129.256,92 (considerando agosto, setembro e outubro).
 """
